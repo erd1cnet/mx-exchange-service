@@ -2,9 +2,18 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+interface ISocial {
+  email: String
+  blog: String
+  twitter: String
+  coinmarketcap: String
+  coingecko: String
+}
+
 interface IAssets {
   website: String
   description: String
+  social: ISocial
   status: String
   pngUrl: String
   svgUrl: String
@@ -173,9 +182,18 @@ type FactoryModel {
   minSwapAmount: Float!
 }
 
+type SocialModel implements ISocial {
+  email: String
+  blog: String
+  twitter: String
+  coinmarketcap: String
+  coingecko: String
+}
+
 type AssetsModel implements IAssets {
   website: String
   description: String
+  social: SocialModel
   status: String
   pngUrl: String
   svgUrl: String
@@ -217,6 +235,15 @@ type EsdtToken implements IEsdtToken {
   type: String!
   balance: String
   derivedEGLD: String!
+  previous24hPrice: String
+  previous7dPrice: String
+  volumeUSD24h: String
+  previous24hVolume: String
+  liquidityUSD: String
+  createdAt: String
+  swapCount24h: Float
+  previous24hSwapCount: Float
+  trendingScore: String
 }
 
 interface IEsdtToken {
@@ -316,14 +343,17 @@ type TransactionModel {
   value: String!
   sender: String!
   receiver: String!
+  senderUsername: String
+  receiverUsername: String
   gasPrice: Float!
   gasLimit: Float!
   data: String
   chainID: String!
   version: Float!
   options: Float
-  status: String
+  guardian: String
   signature: String
+  guardianSignature: String
 }
 
 type FeesCollectorModel {
@@ -404,11 +434,21 @@ type PairModel {
 
   """Fees collector set for this pair"""
   feesCollector: FeesCollectorModel
+  hasFarms: Boolean!
+  hasDualFarms: Boolean!
+  tradesCount: Float!
+  deployedAt: Float!
 }
 
 type FeeDestination {
   address: String!
   tokenID: String!
+}
+
+type PageData {
+  count: Int!
+  limit: Int!
+  offset: Int!
 }
 
 type RewardsModel {
@@ -450,10 +490,59 @@ type PairDayDataModel {
   feesUSD24h: String!
 }
 
+type CandleDataModel {
+  time: String!
+  ohlc: [Float!]!
+}
+
+type BoostedYieldsFactors {
+  maxRewardsFactor: String!
+  userRewardsEnergy: String!
+  userRewardsFarm: String!
+  minEnergyAmount: String!
+  minFarmAmount: String!
+}
+
 type WrapModel {
   address: String!
   shard: Int!
   wrappedToken: EsdtToken!
+}
+
+type PairsResponse {
+  edges: [PairModelEdge!]
+  pageInfo: PairModelPageInfo
+  pageData: PageData
+}
+
+type PairModelEdge {
+  cursor: String
+  node: PairModel
+}
+
+type PairModelPageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
+type TokensResponse {
+  edges: [EsdtTokenEdge!]
+  pageInfo: EsdtTokenPageInfo
+  pageData: PageData
+}
+
+type EsdtTokenEdge {
+  cursor: String
+  node: EsdtToken
+}
+
+type EsdtTokenPageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
 }
 
 type NftToken implements INFTToken {
@@ -514,14 +603,6 @@ type LockedAssetModel {
   activationNonce: Int!
 }
 
-type BoostedYieldsFactors {
-  maxRewardsFactor: String!
-  userRewardsEnergy: String!
-  userRewardsFarm: String!
-  minEnergyAmount: String!
-  minFarmAmount: String!
-}
-
 type LockOption {
   lockEpochs: Int!
   penaltyStartPercentage: Int!
@@ -535,6 +616,121 @@ type SimpleLockEnergyModel {
   lockOptions: [LockOption!]!
   tokenUnstakeAddress: String!
   pauseState: Boolean!
+}
+
+type EnergyUpdateModel {
+  address: String!
+}
+
+type StakingTokenAttributesModel {
+  identifier: String
+  attributes: String
+  type: StakingTokenType!
+  rewardPerShare: String!
+  compoundedReward: String!
+  currentFarmAmount: String!
+}
+
+enum StakingTokenType {
+  STAKING_FARM_TOKEN
+  UNBOND_FARM_TOKEN
+}
+
+type UnbondTokenAttributesModel {
+  identifier: String
+  attributes: String
+  type: StakingTokenType!
+  remainingEpochs: Int!
+}
+
+type StakingModel {
+  address: String!
+  farmToken: NftCollection!
+  farmingToken: EsdtToken!
+  rewardToken: EsdtToken!
+  farmTokenSupply: String!
+  pairContractManagedAddress: String!
+  rewardPerShare: String!
+  accumulatedRewards: String!
+  rewardCapacity: String!
+  annualPercentageRewards: String!
+  apr: String!
+  minUnboundEpochs: Int!
+  perBlockRewards: String!
+  lastRewardBlockNonce: Int!
+  rewardsRemainingDays: Float!
+  divisionSafetyConstant: String!
+  produceRewardsEnabled: Boolean!
+  lockedAssetFactoryManagedAddress: String
+  burnGasLimit: String
+  transferExecGasLimit: String
+  state: String!
+  deployedAt: Int!
+}
+
+type StakingRewardsModel {
+  decodedAttributes: StakingTokenAttributesModel!
+  rewards: String!
+}
+
+type OptimalCompoundModel {
+  """The optimal number of compounds in the given interval"""
+  interval: Int!
+  optimalProfit: Float!
+  days: Int!
+  hours: Int!
+  minutes: Int!
+}
+
+type StakingFarmsResponse {
+  edges: [StakingModelEdge!]
+  pageInfo: StakingModelPageInfo
+  pageData: PageData
+}
+
+type StakingModelEdge {
+  cursor: String
+  node: StakingModel
+}
+
+type StakingModelPageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
+type DualYieldTokenAttributesModel {
+  identifier: String!
+  attributes: String!
+  lpFarmTokenNonce: Int!
+  lpFarmTokenAmount: String!
+  stakingFarmTokenNonce: Int!
+  stakingFarmTokenAmount: String!
+}
+
+type StakingProxyModel {
+  address: String!
+  lpFarmAddress: String!
+  stakingFarmAddress: String!
+  pairAddress: String!
+  stakingToken: EsdtToken!
+  farmToken: NftCollection!
+  dualYieldToken: NftCollection!
+  lpFarmToken: NftCollection!
+}
+
+type DualYieldRewardsModel {
+  identifier: String
+  attributes: String
+  stakingRewards: StakingRewardsModel!
+  farmRewards: RewardsModel!
+}
+
+type UnstakeFarmTokensReceiveModel {
+  liquidityPosition: LiquidityPosition!
+  farmRewards: String!
+  stakingRewards: String!
 }
 
 type CommunityDistributionModel {
@@ -609,36 +805,6 @@ type ProxyModel {
   version: String!
 }
 
-type StakingTokenAttributesModel {
-  identifier: String
-  attributes: String
-  type: StakingTokenType!
-  rewardPerShare: String!
-  compoundedReward: String!
-  currentFarmAmount: String!
-}
-
-enum StakingTokenType {
-  STAKING_FARM_TOKEN
-  UNBOND_FARM_TOKEN
-}
-
-type UnbondTokenAttributesModel {
-  identifier: String
-  attributes: String
-  type: StakingTokenType!
-  remainingEpochs: Int!
-}
-
-type DualYieldTokenAttributesModel {
-  identifier: String!
-  attributes: String!
-  lpFarmTokenNonce: Int!
-  lpFarmTokenAmount: String!
-  stakingFarmTokenNonce: Int!
-  stakingFarmTokenAmount: String!
-}
-
 type UserToken implements IEsdtToken {
   identifier: String!
   name: String!
@@ -666,6 +832,15 @@ type UserToken implements IEsdtToken {
   type: String!
   balance: String
   derivedEGLD: String!
+  previous24hPrice: String
+  previous7dPrice: String
+  volumeUSD24h: String
+  previous24hVolume: String
+  liquidityUSD: String
+  createdAt: String
+  swapCount24h: Float
+  previous24hSwapCount: Float
+  trendingScore: String
   valueUSD: String!
 }
 
@@ -1010,67 +1185,6 @@ type OutdatedContract {
   farmToken: String
 }
 
-type StakingModel {
-  address: String!
-  farmToken: NftCollection!
-  farmingToken: EsdtToken!
-  rewardToken: EsdtToken!
-  farmTokenSupply: String!
-  pairContractManagedAddress: String!
-  rewardPerShare: String!
-  accumulatedRewards: String!
-  rewardCapacity: String!
-  annualPercentageRewards: String!
-  apr: String!
-  minUnboundEpochs: Int!
-  perBlockRewards: String!
-  lastRewardBlockNonce: Int!
-  divisionSafetyConstant: String!
-  produceRewardsEnabled: Boolean!
-  lockedAssetFactoryManagedAddress: String
-  burnGasLimit: String
-  transferExecGasLimit: String
-  state: String!
-}
-
-type StakingRewardsModel {
-  decodedAttributes: StakingTokenAttributesModel!
-  rewards: String!
-}
-
-type OptimalCompoundModel {
-  """The optimal number of compounds in the given interval"""
-  interval: Int!
-  optimalProfit: Float!
-  days: Int!
-  hours: Int!
-  minutes: Int!
-}
-
-type StakingProxyModel {
-  address: String!
-  lpFarmAddress: String!
-  stakingFarmAddress: String!
-  pairAddress: String!
-  stakingToken: EsdtToken!
-  farmToken: NftCollection!
-  dualYieldToken: NftCollection!
-  lpFarmToken: NftCollection!
-}
-
-type DualYieldRewardsModel {
-  identifier: String
-  attributes: String
-  stakingRewards: StakingRewardsModel!
-  farmRewards: RewardsModel!
-}
-
-type UnstakeFarmTokensReceiveModel {
-  liquidityPosition: LiquidityPosition!
-  farmRewards: String!
-  stakingRewards: String!
-}
-
 type PhaseModel {
   name: String!
   penaltyPercent: Float!
@@ -1335,6 +1449,7 @@ type AutoRouteModel {
   pairs: [PairModel!]!
   tolerance: Float!
   transactions: [TransactionModel!]
+  noAuthTransactions(sender: String!): [TransactionModel!]
 }
 
 type TokenUnstakeModel {
@@ -1396,30 +1511,30 @@ type GovernanceProposalModel {
   actions: [GovernanceAction!]!
   description: GovernanceDescriptionVersions!
   feePayment: EsdtTokenPaymentModel!
-  minimumQuorum: String!
+  minimumQuorumPercentage: String!
   votingDelayInBlocks: Int!
   votingPeriodInBlocks: Int!
   withdrawPercentageDefeated: Int!
   totalQuorum: String!
   proposalStartBlock: Int!
   status: String!
+  rootHash: String!
   votes: ProposalVotes!
   hasVoted: Boolean!
+  userVoteType: Float!
   userVotingPower: String!
 }
 
-union GovernanceDescriptionVersions = Description_v0 | Description_v1
+union GovernanceDescriptionVersions = DescriptionV0 | DescriptionV1
 
-type Description_v0 {
+type DescriptionV0 {
   title: String!
-  hash: String!
   strapiId: Int!
   version: Float!
 }
 
-type Description_v1 {
+type DescriptionV1 {
   title: String!
-  hash: String!
   strapiId: Int!
   version: Float!
   shortDescription: String!
@@ -1435,7 +1550,8 @@ input EsdtTokenPaymentInput {
 type Query {
   factory: FactoryModel!
   pairAddresses: [String!]!
-  pairs(offset: Int! = 0, limit: Int! = 10, address: String, firstTokenID: String, secondTokenID: String, issuedLpToken: Boolean! = true, state: String): [PairModel!]!
+  pairs(offset: Int! = 0, limit: Int! = 10, address: String, firstTokenID: String, secondTokenID: String, issuedLpToken: Boolean! = true, state: String, minVolume: Float, feeState: Boolean, minLockedValueUSD: Float): [PairModel!]! @deprecated(reason: "New query (filteredPairs) following GraphQL \"Connection\" standard for pagination/sorting/filtering is now available.")
+  filteredPairs(filters: PairsFilter, pagination: ConnectionArgs, sorting: PairSortingArgs): PairsResponse!
   createPair(firstTokenID: String!, secondTokenID: String!): TransactionModel!
   upgradePair(firstTokenID: String!, secondTokenID: String!, fees: [Float!]!): TransactionModel!
   issueLPToken(address: String!, lpTokenName: String!, lpTokenTicker: String!): TransactionModel!
@@ -1482,6 +1598,7 @@ type Query {
   wrapEgld(amount: String!): TransactionModel!
   unwrapEgld(amount: String!): TransactionModel!
   tokens(identifiers: [String!], type: String, enabledSwaps: Boolean! = false): [EsdtToken!]!
+  filteredTokens(filters: TokensFilter, pagination: ConnectionArgs, sorting: TokenSortingArgs): TokensResponse!
   nftToken(identifier: String!): NftToken!
   simpleLock: [SimpleLockModel!]!
   lockedTokenAttributes(args: DecodeAttributesArgs!): [LockedTokenAttributesModel!]!
@@ -1517,39 +1634,20 @@ type Query {
   migrateToNewFarm(farmAddress: String!, farmTokenID: String!, farmTokenNonce: Int!, amount: String!, lockRewards: Boolean = false, withPenalty: Boolean = false, exitAmount: String): TransactionModel!
   setFarmMigrationConfig(oldFarmAddress: String!, oldFarmTokenID: String!, newFarmAddress: String!, newLockedFarmAddress: String!): TransactionModel!
   stopRewardsAndMigrateRps(farmAddress: String!): TransactionModel!
-  simpleLockEnergy: SimpleLockEnergyModel!
-  userEnergy(vmQuery: Boolean): EnergyModel!
-  penaltyAmount(inputToken: InputTokenModel!, newLockPeriod: Float!, vmQuery: Boolean): String!
-  lockTokensEnergy(inputTokens: InputTokenModel!, lockEpochs: Int!): TransactionModel!
-  updateLockedTokensEnergy(inputToken: InputTokenModel!, unlockType: UnlockType!, newLockPeriod: Float): TransactionModel!
-  mergeTokensEnergy(inputTokens: [InputTokenModel!]!): TransactionModel!
-  migrateOldTokens(tokens: [InputTokenModel!]!): TransactionModel!
-  updateLockOptions(lockOptions: [Int!]!, remove: Boolean): TransactionModel!
-  setPenaltyPercentage(minPenaltyPercentage: Float!, maxPenaltyPercentage: Float!): TransactionModel!
-  setFeesBurnPercentage(percentage: Float!): TransactionModel!
-  setFeesCollectorAddress(collectorAddress: String!): TransactionModel!
-  setOldLockedAssetFactoryAddress(oldLockedAssetFactoryAddress: String!): TransactionModel!
-  userEnergyAmount: String!
-  weeklyTimekeeping(scAddress: String!): WeekTimekeepingModel!
-  weekForEpoch(scAddress: String!, epoch: Float!): WeekForEpochModel!
-  feesCollector: FeesCollectorModel!
-
-  """Add or remove known contracts"""
-  handleKnownContracts(contractAddresses: [String!]!, remove: Boolean): TransactionModel!
-
-  """Add or remove known tokens"""
-  handleKnownTokens(tokenIDs: [String!]!, remove: Boolean): TransactionModel!
-  userFeesCollector: UserEntryFeesCollectorModel!
-  claimFeesRewards: FeesCollectorTransactionModel!
-  updateEnergyForUser: TransactionModel!
-  userLastWeekRewards(energyAmount: String, lockedTokens: String): String!
-  swap(tokenInID: String!, tokenOutID: String!, amountIn: String, amountOut: String, tolerance: Float!): AutoRouteModel!
+  dualYieldTokenAttributes(args: DecodeAttributesArgs!): [DualYieldTokenAttributesModel!]!
+  stakingProxies: [StakingProxyModel!]!
+  stakeFarmTokens(proxyStakingAddress: String!, payments: [InputTokenModel!]!): TransactionModel!
+  claimDualYield(proxyStakingAddress: String!, payments: [InputTokenModel!]!): TransactionModel!
+  unstakeFarmTokens(proxyStakingAddress: String!, payment: InputTokenModel!, attributes: String!, tolerance: Float!): TransactionModel!
+  getDualYieldRewardsForPosition(proxyStakingPositions: BatchFarmRewardsComputeArgs!): [DualYieldRewardsModel!]!
+  getUnstakeTokensReceived(position: CalculateRewardsArgs!): UnstakeFarmTokensReceiveModel!
   getLastErrorMessage(stakeAddress: String!): String!
   stakingTokenAttributes(args: DecodeAttributesArgs!): [StakingTokenAttributesModel!]!
   unboundTokenAttributes(args: DecodeAttributesArgs!): [UnbondTokenAttributesModel!]!
   getStakingRewardsForPosition(stakingPositions: BatchFarmRewardsComputeArgs!): [StakingRewardsModel!]!
   getOptimalCompoundFrequency(stakeAddress: String!, amount: String!, timeInterval: Float!): OptimalCompoundModel!
   stakingFarms: [StakingModel!]!
+  filteredStakingFarms(filters: StakingFarmsFilter, pagination: ConnectionArgs, sorting: StakingFarmsSortingArgs): StakingFarmsResponse!
   stakeFarm(farmStakeAddress: String!, payments: [InputTokenModel!]!): TransactionModel!
   unstakeFarm(farmStakeAddress: String!, payment: InputTokenModel!): TransactionModel!
   setMaxApr(farmStakeAddress: String!, maxApr: Float!): TransactionModel!
@@ -1564,13 +1662,34 @@ type Query {
   compoundStakingRewards(farmStakeAddress: String!, payment: InputTokenModel!): TransactionModel!
   topUpRewards(farmStakeAddress: String!, payment: InputTokenModel!): TransactionModel!
   mergeStakeFarmTokens(farmStakeAddress: String!, payments: [InputTokenModel!]!): TransactionModel!
-  dualYieldTokenAttributes(args: DecodeAttributesArgs!): [DualYieldTokenAttributesModel!]!
-  stakingProxies: [StakingProxyModel!]!
-  stakeFarmTokens(proxyStakingAddress: String!, payments: [InputTokenModel!]!): TransactionModel!
-  claimDualYield(proxyStakingAddress: String!, payments: [InputTokenModel!]!): TransactionModel!
-  unstakeFarmTokens(proxyStakingAddress: String!, payment: InputTokenModel!, attributes: String!, tolerance: Float!): TransactionModel!
-  getDualYieldRewardsForPosition(proxyStakingPositions: BatchFarmRewardsComputeArgs!): [DualYieldRewardsModel!]!
-  getUnstakeTokensReceived(position: CalculateRewardsArgs!): UnstakeFarmTokensReceiveModel!
+  simpleLockEnergy: SimpleLockEnergyModel!
+  userEnergy(vmQuery: Boolean): EnergyModel!
+  penaltyAmount(inputToken: InputTokenModel!, newLockPeriod: Float!, vmQuery: Boolean): String!
+  lockTokensEnergy(inputTokens: InputTokenModel!, lockEpochs: Int!): TransactionModel!
+  updateLockedTokensEnergy(inputToken: InputTokenModel!, unlockType: UnlockType!, newLockPeriod: Float): TransactionModel!
+  mergeTokensEnergy(inputTokens: [InputTokenModel!]!): TransactionModel!
+  migrateOldTokens(tokens: [InputTokenModel!]!): TransactionModel!
+  updateLockOptions(lockOptions: [Int!]!, remove: Boolean): TransactionModel!
+  setPenaltyPercentage(minPenaltyPercentage: Float!, maxPenaltyPercentage: Float!): TransactionModel!
+  setFeesBurnPercentage(percentage: Float!): TransactionModel!
+  setFeesCollectorAddress(collectorAddress: String!): TransactionModel!
+  setOldLockedAssetFactoryAddress(oldLockedAssetFactoryAddress: String!): TransactionModel!
+  userEnergyAmount: String!
+  energyUpdate: EnergyUpdateModel!
+  weeklyTimekeeping(scAddress: String!): WeekTimekeepingModel!
+  weekForEpoch(scAddress: String!, epoch: Float!): WeekForEpochModel!
+  feesCollector: FeesCollectorModel!
+
+  """Add or remove known contracts"""
+  handleKnownContracts(contractAddresses: [String!]!, remove: Boolean): TransactionModel!
+
+  """Add or remove known tokens"""
+  handleKnownTokens(tokenIDs: [String!]!, remove: Boolean): TransactionModel!
+  userFeesCollector: UserEntryFeesCollectorModel!
+  claimFeesRewards: FeesCollectorTransactionModel!
+  updateEnergyForUser: TransactionModel!
+  userLastWeekRewards(energyAmount: String, lockedTokens: String): String!
+  swap(tokenInID: String!, tokenOutID: String!, amountIn: String, amountOut: String, tolerance: Float!): AutoRouteModel!
   distribution: DistributionModel!
   claimLockedAssets: TransactionModel!
   distributedLockedAssets: String!
@@ -1632,6 +1751,7 @@ type Query {
   values24hSum(series: String!, metric: String!, time: String, start: String, bin: String): [HistoricDataModel!]!
   latestHistoricData(series: String!, metric: String!, time: String, start: String, bin: String): [HistoricDataModel!]! @deprecated(reason: "New optimized query will be available soon.")
   latestBinnedHistoricData(series: String!, metric: String!, time: String, start: String, bin: String): [HistoricDataModel!]! @deprecated(reason: "New optimized query will be available soon.")
+  priceCandles(series: String!, metric: String!, start: String!, end: String, resolution: PriceCandlesResolutions!): [CandleDataModel!]!
   pairsDayDatas(pairAddress: String): [PairDayDataModel!]!
   tokenUnstake: TokenUnstakeModel!
   getUnlockedTokensForUser: [UnstakePairModel!]!
@@ -1668,8 +1788,54 @@ type Query {
   escrowPermissions: [SCPermissions!]!
   vote(contractAddress: String!, proposalId: Float!, vote: Float!): TransactionModel!
   governanceContracts(identifiers: [String!], contracts: [String!], type: String): [GovernanceTypes!]!
-  rootHash(contractAddress: String!, proposalId: Float!, vote: Float!): String!
-  totalBalance(contractAddress: String!, proposalId: Float!, vote: Float!): String!
+}
+
+input PairsFilter {
+  address: String
+  firstTokenID: String
+  secondTokenID: String
+  issuedLpToken: Boolean! = true
+  state: String
+  minVolume: Float
+  feeState: Boolean
+  minLockedValueUSD: Float
+  minTradesCount: Float
+  hasFarms: Boolean
+  hasDualFarms: Boolean
+  minDeployedAt: Float
+  searchToken: String
+}
+
+input ConnectionArgs {
+  """Paginate before opaque cursor"""
+  before: String
+
+  """Paginate after opaque cursor"""
+  after: String
+
+  """Paginate first"""
+  first: Int
+
+  """Paginate last"""
+  last: Int
+}
+
+input PairSortingArgs {
+  sortField: PairSortableFields
+  sortOrder: SortingOrder! = ASC
+}
+
+enum PairSortableFields {
+  TRADES_COUNT
+  TVL
+  VOLUME_24
+  FEES_24
+  DEPLOYED_AT
+}
+
+enum SortingOrder {
+  ASC
+  DESC
 }
 
 input SetLocalRoleOwnerArgs {
@@ -1692,6 +1858,34 @@ input InputTokenModel {
   nonce: Int!
   amount: String!
   attributes: String
+}
+
+input TokensFilter {
+  identifiers: [String!]
+  type: String
+  enabledSwaps: Boolean! = false
+  searchToken: String
+  minLiquidity: Float
+}
+
+input TokenSortingArgs {
+  sortField: TokensSortableFields
+  sortOrder: SortingOrder! = ASC
+}
+
+enum TokensSortableFields {
+  PRICE
+  VOLUME
+  PREVIOUS_24H_PRICE
+  PREVIOUS_7D_PRICE
+  PREVIOUS_24H_VOLUME
+  PRICE_CHANGE_24H
+  VOLUME_CHANGE_24H
+  TRADES_COUNT_CHANGE_24H
+  LIQUIDITY
+  TRADES_COUNT
+  TRENDING_SCORE
+  CREATED_AT
 }
 
 input DecodeAttributesArgs {
@@ -1879,6 +2073,22 @@ input CalculateRewardsArgs {
   vmQuery: Boolean! = false
 }
 
+input StakingFarmsFilter {
+  searchToken: String
+}
+
+input StakingFarmsSortingArgs {
+  sortField: StakingFarmsSortableFields
+  sortOrder: SortingOrder! = ASC
+}
+
+enum StakingFarmsSortableFields {
+  PRICE
+  TVL
+  APR
+  DEPLOYED_AT
+}
+
 enum UnlockType {
   TERM_UNLOCK
   EARLY_UNLOCK
@@ -1958,6 +2168,18 @@ input NftTokenInput {
   balance: String!
 }
 
+enum PriceCandlesResolutions {
+  MINUTE_1
+  MINUTE_5
+  MINUTE_15
+  MINUTE_30
+  HOUR_1
+  HOUR_4
+  DAY_1
+  DAY_7
+  MONTH_1
+}
+
 enum SCPermissions {
   NONE
   OWNER
@@ -1969,6 +2191,7 @@ union GovernanceTypes = GovernanceTokenSnapshotContract | GovernanceEnergyContra
 
 type GovernanceTokenSnapshotContract {
   address: String!
+  shard: Int!
   minFeeForPropose: String!
   quorum: String!
   votingDelayInBlocks: Int!
@@ -1977,10 +2200,12 @@ type GovernanceTokenSnapshotContract {
   withdrawPercentageDefeated: Int!
   proposals(proposalId: Int): [GovernanceProposalModel!]!
   vetoPercentageLimit: Int!
+  votingPowerDecimals: Int!
 }
 
 type GovernanceEnergyContract {
   address: String!
+  shard: Int!
   minFeeForPropose: String!
   quorum: String!
   votingDelayInBlocks: Int!
@@ -1989,6 +2214,7 @@ type GovernanceEnergyContract {
   withdrawPercentageDefeated: Int!
   proposals(proposalId: Int): [GovernanceProposalModel!]!
   vetoPercentageLimit: Int!
+  votingPowerDecimals: Int!
   minEnergyForPropose: String!
   feesCollectorAddress: String!
   energyFactoryAddress: String!
