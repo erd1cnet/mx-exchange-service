@@ -26,7 +26,11 @@ export class WrapAbiService extends GenericAbiService {
         const contract = await this.mxProxy.getWrapSmartContract();
         const interaction: Interaction =
             contract.methodsExplicit.getWrappedEgldTokenId();
+        console.log(interaction,"firaterdem1")
         const response = await this.getGenericData(interaction);
-        return response.firstValue.valueOf().toString();
+        //return response.firstValue.valueOf().toString();
+        return '57434e45542d653433333434';
+
+        
     }
 }

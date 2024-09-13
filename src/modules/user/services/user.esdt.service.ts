@@ -66,7 +66,6 @@ export class UserEsdtService {
                   ),
             this.uniquePairTokens(),
         ]);
-
         const userPairEsdtTokens = userTokens.filter((token) =>
             uniquePairTokens.includes(token.identifier),
         );

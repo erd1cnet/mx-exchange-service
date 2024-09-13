@@ -1,14 +1,21 @@
-version: '3.1'
+version: '3.8'
 
 services:
     redis:
-        image: redis
+        image: redis:latest
         container_name: redis
-        command: redis-server
         ports:
-            - '6379:6379'
-        expose:
-            - '6379'
+            - "6379:6379"
+        volumes:
+            - redis_data:/data
+        command: redis-server
+
+    redisinsight:
+        image: redislabs/redisinsight:latest
+        container_name: redisinsight
+        ports:
+            - "8001:8001"
+
     rabbitmq:
         image: 331leo/rabbitmq3-management-mqtt
         hostname: rabbitmq
@@ -18,18 +25,36 @@ services:
             RABBITMQ_DEFAULT_USER: 'guest'
             RABBITMQ_DEFAULT_PASS: 'guest'
         volumes:
-            - /var/lib/rabbitmq
+            - rabbitmq_data:/var/lib/rabbitmq
         ports:
             - '5672:5672'
             - '15672:15672'
+
     mongodb:
         image: mongo:latest
+        container_name: mongodb
         environment:
-            - MONGODB_DATABASE=development
-            - MONGO_INITDB_ROOT_USERNAME=admin
-            - MONGO_INITDB_ROOT_PASSWORD=admin
+            MONGODB_DATABASE: development
+            MONGO_INITDB_ROOT_USERNAME: admin
+            MONGO_INITDB_ROOT_PASSWORD: admin
         ports:
             - '27017:27017'
+        volumes:
+            - mongodb_data:/data/db
+
+    mongo-express:
+        image: mongo-express:latest
+        container_name: mongo-express
+        ports:
+            - '8081:8081'
+        environment:
+            ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+            ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+            ME_CONFIG_MONGODB_SERVER: mongodb
+            ME_CONFIG_MONGODB_URL: "mongodb://admin:admin@mongodb:27017/development"
+        depends_on:
+            - mongodb
+
     timescaledb:
         image: timescale/timescaledb:latest-pg14
         environment:
@@ -37,9 +62,12 @@ services:
             POSTGRES_USER: admin
             POSTGRES_PASSWORD: admin
         ports:
-            - '5432:5432'
+            - '5433:5432'
         volumes:
             - timescaledb_data:/var/lib/postgresql/data
 
 volumes:
+    rabbitmq_data:
+    mongodb_data:
     timescaledb_data:
+    redis_data:

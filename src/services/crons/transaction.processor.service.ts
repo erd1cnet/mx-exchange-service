@@ -33,10 +33,10 @@ export class TransactionProcessorService {
                 lastProcessedTimestamp === undefined
             ) {
                 lastProcessedTimestamp =
-                    await this.apiService.getShardTimestamp(1);
+                    await this.apiService.getShardTimestamp(0);
                 currentTimestamp = lastProcessedTimestamp;
             } else {
-                currentTimestamp = await this.apiService.getShardTimestamp(1);
+                currentTimestamp = await this.apiService.getShardTimestamp(0);
             }
 
             if (currentTimestamp === lastProcessedTimestamp) {

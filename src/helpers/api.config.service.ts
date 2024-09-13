@@ -275,7 +275,6 @@ export class ApiConfigService {
 
     getTimescaleDbHost(): string {
         const host = this.configService.get<string>('TIMESCALEDB_URL');
-        console.log(host);
         if (!host) {
             throw new Error('No TIMESCALEDB_URL present');
         }

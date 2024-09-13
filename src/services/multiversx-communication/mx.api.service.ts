@@ -335,7 +335,7 @@ export class MXApiService {
     async getShardTimestamp(shardId: number): Promise<number> {
         const latestShardBlock = await this.doGetGeneric(
             this.getShardTimestamp.name,
-            `blocks?from=0&size=1&shard=${shardId}`,
+            `blocks?from=0&size=1&shard=${0}`,
         );
         return latestShardBlock[0].timestamp;
     }

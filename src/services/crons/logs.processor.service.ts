@@ -91,11 +91,11 @@ export class LogsProcessorService {
 
         if (!lastProcessedTimestamp || lastProcessedTimestamp === undefined) {
             lastProcessedTimestamp =
-                (await this.apiService.getShardTimestamp(1)) - delay;
+                (await this.apiService.getShardTimestamp(0)) - delay;
             currentTimestamp = lastProcessedTimestamp;
         } else {
             currentTimestamp =
-                (await this.apiService.getShardTimestamp(1)) - delay;
+                (await this.apiService.getShardTimestamp(0)) - delay;
         }
 
         if (currentTimestamp === lastProcessedTimestamp) {

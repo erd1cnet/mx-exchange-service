@@ -38,22 +38,41 @@ export class RemoteConfigGetterService extends GenericGetterService {
         );
     }
 
+    // async getMultiSwapStatus(): Promise<boolean> {
+    //     this.baseKey = 'flag';
+    //     const cacheKey = this.getCacheKey('MULTISWAP');
+    //     return await this.getData(
+    //         cacheKey,
+    //         () =>
+    //             this.flagRepositoryService
+    //                 .findOne({
+    //                     name: 'MULTISWAP',
+    //                 })
+    //                 .then((res) => {
+    //                     return res ? res.value : false;
+    //                 }),
+    //         Constants.oneHour(),
+    //     );
+    // }
+
     async getMultiSwapStatus(): Promise<boolean> {
         this.baseKey = 'flag';
         const cacheKey = this.getCacheKey('MULTISWAP');
-        return await this.getData(
-            cacheKey,
-            () =>
-                this.flagRepositoryService
-                    .findOne({
-                        name: 'MULTISWAP',
-                    })
-                    .then((res) => {
-                        return res ? res.value : false;
-                    }),
-            Constants.oneHour(),
-        );
+    
+        try {
+            const result = await this.flagRepositoryService.findOne({ name: 'MULTISWAP' });
+    
+            if (result && result.value) {
+                await this.cachingService.set(cacheKey, result.value, Constants.oneHour());
+                return result.value;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            return false;
+        }
     }
+    
 
     async getSCAddresses(
         cacheKey: string,
