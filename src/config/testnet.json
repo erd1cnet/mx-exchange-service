@@ -1,38 +1,51 @@
 {
     "multiversx": {
-        "chainID": "T"
+        "chainID": "55"
     },
     "scAddress": {
-        "routerAddress": "erd1qqqqqqqqqqqqqpgqfd2apcqxxmvngsnhmq4xfq22pfnq7gctexksm0gudw",
-        "MEX-708726": "erd1qqqqqqqqqqqqqpgqzjstzefzeastekqpxz6ysh3d0k9eap9aexkscvsdqn",
-        "WEGLD_USDC": "erd1qqqqqqqqqqqqqpgqfsfcrxnlym0fjlnuvus2dmlz6ju9cpsfexks8wq4d4",
+        "routerAddress": "erd1qqqqqqqqqqqqqpgqd62t2ycs4qyewa7r4n7c4xcj0sskk3ry74ns54tc0f",
+        "MEX-a659d0": "",
+        "WEGLD_USDC": "erd1qqqqqqqqqqqqqpgq4vvppmegglmnshwx77he2fqr9zysce6y74nsrsys5g",
+        "distributionAddress": "",
         "proxyDexAddress": {
-            "v1": "erd1qqqqqqqqqqqqqpgqyxu6kgfxmw22zx5atyal4vtpwkc62v86exkshygpfx",
-            "v2": "erd1qqqqqqqqqqqqqpgqkh74aapaz5cahf4rf8fzyxvqkh6ca86yexksjtmmnm"
+            "v1": "",
+            "v2": ""
         },
-        "lockedAssetAddress": "erd1qqqqqqqqqqqqqpgq68yyplpvzs40urda5y7ce8xgn6kj3sarexkslzm02u",
-        "metabondingStakingAddress": "erd1qqqqqqqqqqqqqpgq4jpq0azcwlmcdluzv5ra8ev4vts8ht090n4suseqfa",
+        "lockedAssetAddress": "",
+        "metabondingStakingAddress": "",
         "simpleLockAddress": [
-            "erd1qqqqqqqqqqqqqpgq5fszwql529edaggetu7vkauc07dzed9zexksqdewxw"
+            ""
         ],
         "wrappingAddress": {
-            "shardID-0": "erd1qqqqqqqqqqqqqpgqqkwzsxkjc83vlfex9dmznwm7tjvxlqqkpauqx0n782",
-            "shardID-1": "erd1qqqqqqqqqqqqqpgqhpmz3gh6jnwuyw4qxnksfh74tv8kdf6gexksrputsf",
-            "shardID-2": "erd1qqqqqqqqqqqqqpgqvn9ew0wwn7a3pk053ezex98497hd4exqdg0q8v2e0c"
+            "shardID-0": "erd1qqqqqqqqqqqqqpgqf5ym43drpsfa6qfyn7w9ztp39czxak9h74nsxh7z4u",
+            "shardID-1": "erd1qqqqqqqqqqqqqpgqf5ym43drpsfa6qfyn7w9ztp39czxak9h74nsxh7z4u",
+            "shardID-2": "erd1qqqqqqqqqqqqqpgqf5ym43drpsfa6qfyn7w9ztp39czxak9h74nsxh7z4u"
         },
         "priceDiscovery": [
         ],
-        "simpleLockEnergy": "erd1qqqqqqqqqqqqqpgqgcd4wquv46u5u9gvvz4x3avuwmjqwfstexksk37nf4",
-        "feesCollector": "erd1qqqqqqqqqqqqqpgqt5mtw8hjy5n8vkap5ea3nmd4qd9rwyzvexksw07tns",
-        "energyUpdate": "erd1qqqqqqqqqqqqqpgqyax9yu7uv04408epmrn23n6t252pylva295qv40w7y",
-        "tokenUnstake": "erd1qqqqqqqqqqqqqpgqmc6lkxzn7cmj2c3ztczapds9ch2c4w9h0n4stl2uq7",
-        "lockedTokenWrapper": "erd1qqqqqqqqqqqqqpgqp628sk5y6c5w8twdddmf4n6kcpatnfuk295q0xuzle",
-        "escrow": "erd1qqqqqqqqqqqqqpgqcsmrv0hh6fvmhe4e7q4resj7rkeqxp7p0n4s0qfapx"
+        "simpleLockEnergy": "",
+        "feesCollector": "",
+        "energyUpdate": "",
+        "tokenUnstake": "",
+        "lockedTokenWrapper": "",
+        "escrow": ""
     },
     "governance": {
-        "oldEnergy": {},
-        "energy": {},
-        "tokenSnapshot": {}
+        "oldEnergy": {
+            "cvadratic": [
+            ]
+        },
+        "energy": {
+            "cvadratic": [
+                ""
+            ]
+        },
+        "tokenSnapshot": {
+            "linear": [
+            ],
+            "cvadratic": [
+            ]
+        }
     },
     "farms": {
         "v1.2": [],
@@ -47,26 +60,23 @@
                 "unlockedRewards": [
                 ],
                 "lockedRewards": [
-                    "erd1qqqqqqqqqqqqqpgqk232ukl7944vmjq44krjns0yturh6ms9exksgmr2sc",
-                    "erd1qqqqqqqqqqqqqpgq3qw8j5kd6295y8ud4kwc7k3qyhdcvu6fexksas5lm6",
-                    "erd1qqqqqqqqqqqqqpgqzqlavpqgwkrnslzrl05aqms2au2327asexksc4u3qg",
-                    "erd1qqqqqqqqqqqqqpgqv2w0j3wveyv09mclcnnulcn0d5vwuhe8exksu2n3rz"
-                    
+
                 ]
         }
     },
-    "tokenProviderUSD": "WEGLD-dd8471",
-    "tokensSupply": ["MEX-708726"],
-    "cachedTokensPrice": ["MEX-708726"],
+    "tokenProviderUSD": "WCNET-e43344",
+    "tokensSupply": [""],
+    "cachedTokensPrice": ["","WCNET-e43344"],
     "constants": {
         "MAX_SWAP_SPREAD": 0.9,
-        "MEX_TOKEN_ID": "MEX-708726",
-        "USDC_TOKEN_ID": "USDC-5bee92",
+        "MEX_TOKEN_ID": "",
+        "USDC_TOKEN_ID": "USDC-ad1552",
         "MAINTENANCE": false,
         "EPOCHS_IN_WEEK": 7,
         "roundedSwapEnable": {
-            "USDC-5bee92": "5000000",
-            "WEGLD-dd8471": "100000000000000000"
+            "USDC-ad1552": "5000000000000000000",
+            "WCNET-e43344": "100000000000000000",
+            "MEX-a659d0": ""
         }
     }
 }
